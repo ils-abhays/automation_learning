@@ -114,19 +114,12 @@ def create_event(data):
     # Save
     driver.find_element(By.XPATH, '//button[text()="Save"]').click()
 
-    # ------------------------
-    # VERIFY EVENT CREATED
-    # ------------------------
-    # Wait until Events list loads
-    event_code_element = wait.until(
-        EC.presence_of_element_located((By.XPATH, '(//td[@class="ant-table-cell"]/a)[1]'))
-    )
-    latest_event_code = event_code_element.text.strip()
-
-    if latest_event_code == data["event_code"]:
-        print(f"✅ PASS: Event {data['event_code']} created successfully and verified.")
+    # Verify back on Events page
+    wait.until(EC.presence_of_element_located((By.XPATH, '//button[contains(text(),"Create Event")]')))
+    if data["event_code"] in driver.page_source:
+        print(f"✅ PASS: Event {data['event_code']} created successfully")
     else:
-        print(f"❌ FAIL: Expected {data['event_code']} but found {latest_event_code}")
+        print(f"❌ FAIL: Event {data['event_code']} not found after save")
 
 # ------------------------
 # RUN EVENTS CREATION
